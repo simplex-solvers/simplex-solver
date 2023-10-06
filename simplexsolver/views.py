@@ -3,7 +3,7 @@ from simplexsolver import app
 
 @app.route('/')
 def index():
-    return 'Hello World!'
+    return render_template('index.html')
 
 @app.route('/resultado', methods=['POST'])
 def solve():
