@@ -15,7 +15,7 @@ O **Simplex Solver** é uma aplicação web baseada em Flask que resolve problem
 Recomendamos criar um ambiente virtual para isolar as dependências desse projeto. Use o seguinte comando para criar um ambiente virtual:
 
 ```bash
-python -m venv venv
+python -m venv .venv
 ```
 ### 2. Ative o Ambiente Virtual
 
@@ -23,11 +23,11 @@ Ative o ambiente virtual de acordo com seu sistema operacional:
 
 No Windows:
 ```bash
-venv\Scripts\activate
+.venv\Scripts\activate
 ```
 No macOS e Linux:
 ```bash
-source venv/bin/activate
+source .venv/bin/activate
 ```
 ### 3. Instale as dependências
 ```bash
