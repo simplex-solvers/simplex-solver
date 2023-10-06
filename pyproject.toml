@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "simplex-solver"
+version = "0.1.0"
+description = "A linear programming solver application that uses the simplex method"
+authors = ["Gabriel Rodrigues, Gabrielle Zuba, João Victor Bastos, Maria Fernanda Gomes"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
