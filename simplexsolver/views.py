@@ -1,10 +1,21 @@
 from flask import render_template, request
 from simplexsolver import app
+import numpy as np
+
+c = np.array([0.4, 0.5])
+A = np.array([[0.3, 0.1], [0.5, 0.5], [0.6, 0.4]])
+b = np.array([2.7, 6, 6])
+constraints = ["<=", "=", ">="]
+problem_type = "min"
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/resultado', methods=['POST'])
-def solve():
-    return 'Solução do problema.'
+@app.route('/resultado')
+def solve_():
+    return render_template('index.html')
+
+@app.route('/grafico')
+def solve_graphical():
+    return render_template('index.html')
