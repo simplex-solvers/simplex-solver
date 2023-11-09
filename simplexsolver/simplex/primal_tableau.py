@@ -1,5 +1,4 @@
 import numpy as np
-import math 
 
 class PrimalTableau:
     def __init__(self, c, A, b, constraint, problem_type):
@@ -12,7 +11,6 @@ class PrimalTableau:
         self.b = b
         self.constraint = constraint
         self.M = 100
- 
 
     def add_variables(self):
         m, _ = self.A.shape
@@ -46,6 +44,7 @@ class PrimalTableau:
     def create_tableau(self):
         combined_array = np.hstack((self.A, np.expand_dims(self.b, axis=1)))
         self.c = np.append(self.c, 0)
+        
 
         for i, constraint in enumerate(self.constraint):
             if constraint == ">=" or constraint == "=":
@@ -54,3 +53,4 @@ class PrimalTableau:
         tableau = np.vstack((self.c, combined_array))
         return tableau
 
+        
