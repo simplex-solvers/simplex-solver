@@ -42,9 +42,10 @@ class PrimalTableau:
 
 
     def create_tableau(self):
+        self.add_variables()
+        
         combined_array = np.hstack((self.A, np.expand_dims(self.b, axis=1)))
         self.c = np.append(self.c, 0)
-        
 
         for i, constraint in enumerate(self.constraint):
             if constraint == ">=" or constraint == "=":
