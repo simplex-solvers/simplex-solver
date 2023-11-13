@@ -33,6 +33,9 @@ def tabular_solve():
     problem = SimplexAlgorithm(final_tableau, problem_type, num_of_var)
     solution, all_tableaus = problem.solve()
 
+    for tableau in all_tableaus:
+        print(tableau)
+
     return {
         "solution": solution,
         "all_tableaus": [tableau for tableau in all_tableaus]

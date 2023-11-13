@@ -8,8 +8,10 @@ class SimplexAlgorithm:
       self.num_of_variables = num_of_variables
       self.all_iteracions = []
 
-
    def solve(self):
+      
+      self.all_iteracions.append(self.tableau.tolist())
+
       while self.is_not_optimum():
          #Passo a passo do algoritmo
          entering_column = self.get_entering_column()
