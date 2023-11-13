@@ -57,6 +57,7 @@ def graph_solve():
     solution, _ = problem.solve()
 
     if num_of_var == 2:
-        create_graph(A, b, c, constraints, solution)
+        graph_html = create_graph(A, b, c, constraints, solution)
 
-    return { "solution": solution }    
+    return render_template('graph.html', graph_html=graph_html)
+   

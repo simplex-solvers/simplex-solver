@@ -132,4 +132,6 @@ def create_graph(A, b, c, constraints, variables):
             color="#7f7f7f"
         ),
     )
-    fig.show()
+    
+    return fig.to_html(full_html=False)
+
