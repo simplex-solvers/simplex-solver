@@ -11,6 +11,8 @@ class PrimalTableau:
         self.b = b
         self.constraint = constraint
         self.M = 100
+        self.add_variables()
+
 
     def add_variables(self):
         m, _ = self.A.shape
@@ -41,8 +43,7 @@ class PrimalTableau:
                 self.c = np.append(self.c, self.M)
 
 
-    def create_tableau(self):
-        self.add_variables()
+    def get_formated_tableau(self):
         
         combined_array = np.hstack((self.A, np.expand_dims(self.b, axis=1)))
         self.c = np.append(self.c, 0)

@@ -5,17 +5,10 @@ from .simplex.primal_tableau import PrimalTableau
 from .simplex.simplex_algorithm import SimplexAlgorithm
 from .simplex.graphic_solution import create_graph
 
-# #Veio do frontend
-# c = np.array([0.4, 0.5])
-# A = np.array([[0.3, 0.1], [0.5, 0.5], [0.6, 0.4]])
-# b = np.array([2.7, 6, 6])
-# constraints = ["<=", "=", ">="]
-# problem_type = "min"
-# num_of_var = c.shape[0]
-
 @app.route('/')
 def index():    
     return render_template('index.html')
+
 
 @app.route('/tabular', methods=['POST'])
 def tabular_solve():
@@ -28,13 +21,14 @@ def tabular_solve():
     num_of_var = data['num_of_var']
 
     tableau = PrimalTableau(c, A, b, constraints, problem_type)
-    final_tableau = tableau.create_tableau()
+    formated_tableau = tableau.get_formated_tableau()
 
-    problem = SimplexAlgorithm(final_tableau, problem_type, num_of_var)
+    problem = SimplexAlgorithm(formated_tableau, problem_type, num_of_var)
     solution, all_tableaus = problem.solve()
 
     for tableau in all_tableaus:
         print(tableau)
+        print()
 
     return {
         "solution": solution,
@@ -53,9 +47,9 @@ def graph_solve():
     num_of_var = data['num_of_var']
 
     tableau = PrimalTableau(c, A, b, constraints, problem_type)
-    final_tableau = tableau.create_tableau()
+    formated_tableau = tableau.get_formated_tableau()
 
-    problem = SimplexAlgorithm(final_tableau, problem_type, num_of_var)
+    problem = SimplexAlgorithm(formated_tableau, problem_type, num_of_var)
     
     solution, _ = problem.solve()
 
