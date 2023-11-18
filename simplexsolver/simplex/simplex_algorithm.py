@@ -97,7 +97,6 @@ class SimplexDual:
       self.all_iteracions = []
 
    def solve(self):
-      
       self.all_iteracions.append(self.tableau.tolist())
 
       while self.is_not_optimum():
@@ -128,8 +127,7 @@ class SimplexDual:
       """Tem que dar uma testada nisso aqui, parece meio estranho"""
       ratios = []
 
-
-      for i, element in enumerate(self.tableau[pivot_row:-1]):
+      for i, element in enumerate(self.tableau[pivot_row, :-1]):
          if element >= 0:
             ratios.append(math.inf)
          else:
