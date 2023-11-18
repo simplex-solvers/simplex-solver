@@ -8,6 +8,7 @@ class SimplexPrimal:
       self.num_of_variables = num_of_variables
       self.all_iteracions = []
 
+
    def solve(self):
       
       self.all_iteracions.append(self.tableau.tolist())
@@ -35,22 +36,14 @@ class SimplexPrimal:
    
 
    def get_entering_column(self):
-      objective_row = self.objective_row
-      entering_column = None
-      min_coefficient = math.inf
-
-      for i, coefficient in enumerate(objective_row[:-1]):
-         if coefficient < min_coefficient:
-               min_coefficient = coefficient
-               entering_column = i
-               
-      return entering_column
+      objective_row = self.objective_row[:-1] #Array Numpy
+      return np.argmin(objective_row)
 
 
    def get_pivot_row(self, entering_column):
       pivot_column = (self.tableau[1:, entering_column])
       b_column = (self.tableau[1:, -1])
-      ratios = []
+      ratios = [] #Lista
       
       for i, element in enumerate(pivot_column):
          if element <= 0:
@@ -58,8 +51,7 @@ class SimplexPrimal:
          else:
             ratios.append(b_column[i] / element)
       
-      pivot_row = ratios.index(min(ratios)) + 1
-
+      pivot_row = ratios.index(min(ratios)) + 1 
       return pivot_row
 
 
@@ -93,5 +85,6 @@ class SimplexPrimal:
             solution.append(0)
 
       solution = (solution[:self.num_of_variables])
-
       return solution
+
+

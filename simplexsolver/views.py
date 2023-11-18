@@ -26,6 +26,7 @@ def tabular_solve():
     problem = SimplexPrimal(formated_tableau, problem_type, num_of_var)
     solution, all_tableaus = problem.solve()
 
+
     for tableau in all_tableaus:
         print(tableau)
         print()
