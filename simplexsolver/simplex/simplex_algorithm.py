@@ -1,7 +1,7 @@
 import numpy as np
 import math
 
-class SimplexAlgorithm:
+class SimplexPrimal:
    def __init__(self, tableau, problem_type, num_of_variables):
       self.tableau = tableau
       self.problem_type = problem_type

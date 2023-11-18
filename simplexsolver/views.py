@@ -2,7 +2,7 @@ from flask import render_template, request
 from simplexsolver import app
 import numpy as np
 from .simplex.primal_tableau import PrimalTableau
-from .simplex.simplex_algorithm import SimplexAlgorithm
+from .simplex.simplex_algorithm import SimplexPrimal
 from .simplex.graphic_solution import create_graph
 
 @app.route('/')
@@ -23,7 +23,7 @@ def tabular_solve():
     tableau = PrimalTableau(c, A, b, constraints, problem_type)
     formated_tableau = tableau.get_formated_tableau()
 
-    problem = SimplexAlgorithm(formated_tableau, problem_type, num_of_var)
+    problem = SimplexPrimal(formated_tableau, problem_type, num_of_var)
     solution, all_tableaus = problem.solve()
 
     for tableau in all_tableaus:
@@ -49,7 +49,7 @@ def graph_solve():
     tableau = PrimalTableau(c, A, b, constraints, problem_type)
     formated_tableau = tableau.get_formated_tableau()
 
-    problem = SimplexAlgorithm(formated_tableau, problem_type, num_of_var)
+    problem = SimplexPrimal(formated_tableau, problem_type, num_of_var)
     
     solution, _ = problem.solve()
 
