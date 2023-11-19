@@ -1,9 +1,9 @@
 from flask import render_template, request
 from simplexsolver import app
 import numpy as np
-from .simplex.primal_tableau import PrimalTableau
 from .simplex.simplex_algorithm import SimplexPrimal, SimplexDual
 from .simplex.graphic_solution import create_graph
+from .simplex.dual_validator import primal_to_dual, change_constraints
 
 @app.route('/')
 def index():    
@@ -22,19 +22,22 @@ def tabular_solve():
     problem_form = data['problem_form']
 
     if problem_form == "primal":
-        tableau = PrimalTableau(c, A, b, constraints, problem_type)
-        formated_tableau = tableau.get_formated_tableau()
-
-        problem = SimplexPrimal(formated_tableau, problem_type, num_of_var)
+        problem = SimplexPrimal(problem_type, num_of_var, c, A, b, constraints)
         solution, all_tableaus = problem.solve()
 
-    elif problem_form == "dual":
-        problem = SimplexDual(formated_tableau, problem_type, num_of_var)
+    elif problem_form == "dual":              
+        if problem_type =="max":
+            A, b, c, constraints, problem_type = primal_to_dual(A, b, c, problem_type)
+            A, b, constraints = change_constraints(A, b, constraints)
+            
+        if "=" in constraints or ">=" in constraints:
+            A, b, constraints = change_constraints(A, b, constraints)
+
+        problem = SimplexDual(problem_type, num_of_var, c, A, b, constraints)
         solution, all_tableaus = problem.solve()
 
     for tableau in all_tableaus:
         print(tableau)
-        print()
 
     return {
         "solution": solution,
@@ -52,10 +55,7 @@ def graph_solve():
     problem_type = data['problem_type']
     num_of_var = data['num_of_var']
 
-    tableau = PrimalTableau(c, A, b, constraints, problem_type)
-    formated_tableau = tableau.get_formated_tableau()
-
-    problem = SimplexPrimal(formated_tableau, problem_type, num_of_var)
+    problem = SimplexPrimal(problem_type, num_of_var, c, A, b, constraints)
     
     solution, _ = problem.solve()
 

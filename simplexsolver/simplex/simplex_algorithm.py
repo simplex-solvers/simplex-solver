@@ -2,16 +2,20 @@ import numpy as np
 import math
 
 class SimplexPrimal:
-   def __init__(self, tableau, problem_type, num_of_variables):
-      self.tableau = tableau
+   def __init__(self, problem_type, num_of_variables, c, A, b, constraint):
       self.problem_type = problem_type
+      self.tableau = np.array([])
       self.num_of_variables = num_of_variables
       self.all_iteracions = []
+      self.c = c
+      self.A = A
+      self.b = b
+      self.constraint = constraint
+      self.M = 100
 
 
    def solve(self):
-      
-      self.all_iteracions.append(self.tableau.tolist())
+      self.get_formated_initial_tableau()
 
       while self.is_not_optimum():
          #Passo a passo do algoritmo
@@ -21,6 +25,62 @@ class SimplexPrimal:
          self.update_tableau(pivot_row, entering_column, pivot_value)
       
       return self.get_solution(), self.all_iteracions
+
+
+   def add_surplus_variables(self, m, i):
+      surplus_variable = np.zeros(m)
+      surplus_variable[i] = -1  
+      self.A = np.column_stack((self.A, surplus_variable))  
+      self.c = np.append(self.c, 0)
+
+
+   def add_slack_variables(self, m, i):
+      slack_variable = np.zeros(m)
+      slack_variable[i] = 1 
+      self.A = np.column_stack((self.A, slack_variable)) 
+      self.c = np.append(self.c, 0)
+
+    
+   def add_artificial_variables(self, m, i):
+      artificial_variable = np.zeros(m)
+      artificial_variable[i] = 1  
+      self.A = np.column_stack((self.A, artificial_variable)) 
+      self.c = np.append(self.c, self.M)
+
+
+   def add_variables(self):
+      m, _ = self.A.shape
+
+      for i in range(m):
+         constraint = self.constraint[i]
+
+         if constraint == "<=":
+               self.add_slack_variables(m, i)
+
+         elif constraint == ">=":
+               self.add_surplus_variables(m, i) 
+               self.add_artificial_variables(m, i)
+
+         elif constraint == "=":
+               self.add_artificial_variables(m, i)
+
+   
+   def get_formated_initial_tableau(self):     
+      self.add_variables()
+
+      if self.problem_type == "max":
+            self.c = -self.c
+
+      combined_array = np.hstack((self.A, np.expand_dims(self.b, axis=1)))
+      self.c = np.append(self.c, 0)
+
+      for i, constraint in enumerate(self.constraint):
+         if constraint == ">=" or constraint == "=":
+               self.c = self.c - self.M * combined_array[i] 
+      
+      self.tableau = np.vstack((self.c, combined_array))
+      self.all_iteracions.append(self.tableau.tolist())
+
 
    def is_not_optimum(self):
       return any(self.objective_row[:-1] < 0)
@@ -88,16 +148,22 @@ class SimplexPrimal:
       return solution
 
 
+#Dualzinho <3
 class SimplexDual:
 
-   def __init__(self, tableau, problem_type, num_of_variables):
-      self.tableau = tableau
+   def __init__(self, problem_type, num_of_variables, c, A, b, constraint):
       self.problem_type = problem_type
+      self.tableau = np.array([])
       self.num_of_variables = num_of_variables
       self.all_iteracions = []
+      self.c = c
+      self.A = A
+      self.b = b
+      self.constraint = constraint
+      self.M = 100
 
    def solve(self):
-      self.all_iteracions.append(self.tableau.tolist())
+      self.get_formated_intial_tableau()
 
       while self.is_not_optimum():
          #Passo a passo do algoritmo
@@ -107,6 +173,28 @@ class SimplexDual:
          self.update_tableau(pivot_row, entering_column, pivot_value)    
       return self.get_solution(), self.all_iteracions
    
+
+   def add_slack_variables(self, m, i):
+      slack_variable = np.zeros(m)
+      slack_variable[i] = 1 
+      self.A = np.column_stack((self.A, slack_variable)) 
+      self.c = np.append(self.c, 0)
+
+   
+   def add_variables(self):
+      m, _ = self.A.shape
+
+      for i in range(m):
+         self.add_slack_variables(m, i)
+
+
+   def get_formated_intial_tableau(self):
+      self.add_variables()
+      combined_array = np.hstack((self.A, np.expand_dims(self.b, axis=1)))
+      self.c = np.append(-self.c, 0)
+      self.tableau = np.vstack((self.c, combined_array))
+      self.all_iteracions.append(self.tableau.tolist())
+
 
    @property
    def b_column(self):
