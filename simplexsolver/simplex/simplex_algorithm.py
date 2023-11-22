@@ -110,7 +110,6 @@ class SimplexPrimal(SimplexBase):
       surplus_variable[i] = -1  
       self.A = np.column_stack((self.A, surplus_variable))  
       self.c = np.append(self.c, 0)
-
     
    def add_artificial_variables(self, m, i):
       artificial_variable = np.zeros(m)
@@ -152,8 +151,11 @@ class SimplexPrimal(SimplexBase):
       
       self.tableau = np.vstack((self.c, combined_array))
       self.all_iterations.append(self.tableau.tolist())
+<<<<<<< HEAD
       
       return(self.tableau)
+=======
+>>>>>>> 30e2fe7877db4324f971dc3b586c39845c7cbb27
 
 
    def is_not_optimum(self):
