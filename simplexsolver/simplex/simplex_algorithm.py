@@ -56,7 +56,7 @@ class SimplexBase(ABC):
             multiplier = -row[entering_column]
             new_tableau[index] = np.round(multiplier * new_tableau[pivot_row] + self.tableau[index], decimals=5)
       
-      self.all_iteracions.append(new_tableau.tolist())
+      self.all_iterations.append(new_tableau.tolist())
       self.tableau = new_tableau
 
    def get_solution(self):
@@ -95,7 +95,7 @@ class SimplexPrimal(SimplexBase):
          pivot_value = self.get_pivot_value(pivot_row, entering_column)
          self.update_tableau(pivot_row, entering_column, pivot_value)
       
-      return self.get_solution(), self.all_iteracions
+      return self.get_solution(), self.all_iterations
 
 
    def add_slack_variables(self, m, i):
@@ -143,7 +143,7 @@ class SimplexPrimal(SimplexBase):
                self.c = self.c - self.M * combined_array[i] 
       
       self.tableau = np.vstack((self.c, combined_array))
-      self.all_iteracions.append(self.tableau.tolist())
+      self.all_iterations.append(self.tableau.tolist())
 
 
    def is_not_optimum(self):
@@ -181,7 +181,7 @@ class SimplexDual(SimplexBase):
       super().__init__(problem_type, num_of_variables, c, A, b, constraint)
 
    def solve(self):
-      self.get_formated_intial_tableau()
+      self.get_formated_initial_tableau()
 
       while self.is_not_optimum():
          #Passo a passo do algoritmo
@@ -189,7 +189,7 @@ class SimplexDual(SimplexBase):
          entering_column = self.get_entering_column(pivot_row)
          pivot_value = self.get_pivot_value(pivot_row, entering_column)
          self.update_tableau(pivot_row, entering_column, pivot_value)    
-      return self.get_solution(), self.all_iteracions
+      return self.get_solution(), self.all_iterations
    
    
    def add_variables(self):
@@ -199,12 +199,12 @@ class SimplexDual(SimplexBase):
          self.add_slack_variables(m, i)
 
 
-   def get_formated_intial_tableau(self):
+   def get_formated_initial_tableau(self):
       self.add_variables()
       combined_array = np.hstack((self.A, np.expand_dims(self.b, axis=1)))
       self.c = np.append(-self.c, 0)
       self.tableau = np.vstack((self.c, combined_array))
-      self.all_iteracions.append(self.tableau.tolist())
+      self.all_iterations.append(self.tableau.tolist())
 
 
    @property
