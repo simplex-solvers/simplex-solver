@@ -66,11 +66,11 @@ class SimplexPrimal:
 
    
    def get_formated_initial_tableau(self):     
-      self.add_variables()
-
       if self.problem_type == "max":
             self.c = -self.c
 
+      self.add_variables()
+      
       combined_array = np.hstack((self.A, np.expand_dims(self.b, axis=1)))
       self.c = np.append(self.c, 0)
 
