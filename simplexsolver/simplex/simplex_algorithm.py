@@ -76,7 +76,7 @@ class SimplexBase(ABC):
 
       op_z = np.round(self.tableau[0][-1], decimals=2)
       
-      if op_z < 0: #Se for de minimizaçâo, multiplcamos por -1
+      if op_z < 0: 
          op_z = -op_z   
 
       solution.append(op_z)
@@ -151,13 +151,8 @@ class SimplexPrimal(SimplexBase):
       
       self.tableau = np.vstack((self.c, combined_array))
       self.all_iterations.append(self.tableau.tolist())
-<<<<<<< HEAD
+
       
-      return(self.tableau)
-=======
->>>>>>> 30e2fe7877db4324f971dc3b586c39845c7cbb27
-
-
    def is_not_optimum(self):
       return any(self.objective_row[:-1] < 0)
 
