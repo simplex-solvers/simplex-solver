@@ -56,7 +56,7 @@ class SimplexBase(ABC):
             multiplier = -row[entering_column]
             new_tableau[index] = np.round(multiplier * new_tableau[pivot_row] + self.tableau[index], decimals=5)
       
-      self.all_iteracions.append(new_tableau.tolist())
+      self.all_iterations.append(new_tableau.tolist())
       self.tableau = new_tableau
 
    def get_solution(self):
@@ -73,6 +73,13 @@ class SimplexBase(ABC):
             solution.append(op_value) 
          else:
             solution.append(0)
+
+      op_z = np.round(self.tableau[0][-1], decimals=2)
+      
+      if op_z < 0: #Se for de minimizaçâo, multiplcamos por -1
+         op_z = -op_z   
+
+      solution.append(op_z)
 
       solution = (solution[:self.num_of_variables])
       return solution
@@ -95,13 +102,13 @@ class SimplexPrimal(SimplexBase):
          pivot_value = self.get_pivot_value(pivot_row, entering_column)
          self.update_tableau(pivot_row, entering_column, pivot_value)
       
-      return self.get_solution(), self.all_iteracions
+      return self.get_solution(), self.all_iterations
 
 
-   def add_slack_variables(self, m, i):
-      slack_variable = np.zeros(m)
-      slack_variable[i] = 1 
-      self.A = np.column_stack((self.A, slack_variable)) 
+   def add_surplus_variables(self, m, i):
+      surplus_variable = np.zeros(m)
+      surplus_variable[i] = -1  
+      self.A = np.column_stack((self.A, surplus_variable))  
       self.c = np.append(self.c, 0)
 
     
@@ -130,10 +137,11 @@ class SimplexPrimal(SimplexBase):
 
    
    def get_formated_initial_tableau(self):     
-      self.add_variables()
-
+      
       if self.problem_type == "max":
             self.c = -self.c
+      
+      self.add_variables()
 
       combined_array = np.hstack((self.A, np.expand_dims(self.b, axis=1)))
       self.c = np.append(self.c, 0)
@@ -143,7 +151,9 @@ class SimplexPrimal(SimplexBase):
                self.c = self.c - self.M * combined_array[i] 
       
       self.tableau = np.vstack((self.c, combined_array))
-      self.all_iteracions.append(self.tableau.tolist())
+      self.all_iterations.append(self.tableau.tolist())
+      
+      return(self.tableau)
 
 
    def is_not_optimum(self):
@@ -181,7 +191,7 @@ class SimplexDual(SimplexBase):
       super().__init__(problem_type, num_of_variables, c, A, b, constraint)
 
    def solve(self):
-      self.get_formated_intial_tableau()
+      self.get_formated_initial_tableau()
 
       while self.is_not_optimum():
          #Passo a passo do algoritmo
@@ -189,7 +199,7 @@ class SimplexDual(SimplexBase):
          entering_column = self.get_entering_column(pivot_row)
          pivot_value = self.get_pivot_value(pivot_row, entering_column)
          self.update_tableau(pivot_row, entering_column, pivot_value)    
-      return self.get_solution(), self.all_iteracions
+      return self.get_solution(), self.all_iterations
    
    
    def add_variables(self):
@@ -199,12 +209,12 @@ class SimplexDual(SimplexBase):
          self.add_slack_variables(m, i)
 
 
-   def get_formated_intial_tableau(self):
+   def get_formated_initial_tableau(self):
       self.add_variables()
       combined_array = np.hstack((self.A, np.expand_dims(self.b, axis=1)))
       self.c = np.append(-self.c, 0)
       self.tableau = np.vstack((self.c, combined_array))
-      self.all_iteracions.append(self.tableau.tolist())
+      self.all_iterations.append(self.tableau.tolist())
 
 
    @property
