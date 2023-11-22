@@ -98,12 +98,11 @@ class SimplexPrimal(SimplexBase):
       return self.get_solution(), self.all_iterations
 
 
-   def add_slack_variables(self, m, i):
-      slack_variable = np.zeros(m)
-      slack_variable[i] = 1 
-      self.A = np.column_stack((self.A, slack_variable)) 
+   def add_surplus_variables(self, m, i):
+      surplus_variable = np.zeros(m)
+      surplus_variable[i] = -1  
+      self.A = np.column_stack((self.A, surplus_variable))  
       self.c = np.append(self.c, 0)
-
     
    def add_artificial_variables(self, m, i):
       artificial_variable = np.zeros(m)
