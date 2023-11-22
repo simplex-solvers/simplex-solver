@@ -79,10 +79,14 @@ class SimplexBase(ABC):
       if op_z < 0: 
          op_z = -op_z   
 
-      solution.append(op_z)
-
       solution = (solution[:self.num_of_variables])
-      return solution
+
+      solution_dict = {
+        'solution_variables': solution,
+        'op_z': op_z
+      }
+
+      return solution_dict
 
 
 
@@ -152,7 +156,7 @@ class SimplexPrimal(SimplexBase):
       self.tableau = np.vstack((self.c, combined_array))
       self.all_iterations.append(self.tableau.tolist())
 
-      
+
    def is_not_optimum(self):
       return any(self.objective_row[:-1] < 0)
 
