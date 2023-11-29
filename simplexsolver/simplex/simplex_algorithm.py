@@ -1,6 +1,7 @@
 import numpy as np
 import math
 from abc import ABC, abstractmethod
+import random
 
 class SimplexBase(ABC):
    def __init__(self, problem_type, num_of_variables, c, A, b, constraint):
@@ -108,17 +109,16 @@ class SimplexPrimal(SimplexBase):
 
       while self.is_not_optimum():
          entering_column = self.get_entering_column()
-         print("C - entra", entering_column)
          leaving_row = self.get_leaving_row(entering_column)
-         print("L - sai", leaving_row)
          pivot_value = self.get_pivot_value(leaving_row, entering_column)
-         print("pivo", pivot_value)
          self.update_tableau(leaving_row, entering_column, pivot_value)
      
       self.solution_dict['solution'] = self.get_solution()
      
       if self.test_multiple_solutions():
          self.solution_dict['additional_solutions'] =  self.get_solution()
+         self.solution_dict['multiple_solution'] = self.get_multiple_solution()
+      
 
       self.solution_dict['optimal_solution'] = self.get_optimal_solution()
 
@@ -214,6 +214,16 @@ class SimplexPrimal(SimplexBase):
             return True
      
       return False
+   
+   def get_multiple_solution(self):
+      B = self.solution_dict.get('solution')
+      C = self.solution_dict.get('additional_solutions')
+      alpha = random.uniform(0, 1)
+      multiple_solution = []
+      for i in range(len(B)):
+         x = alpha * B[i] + (alpha - 1) * C[i]
+         multiple_solution.append(round(x, 2))
+      return multiple_solution
 
 
 class SimplexDual(SimplexBase):
