@@ -220,7 +220,7 @@ class SimplexPrimal(SimplexBase):
       alpha = random.uniform(0, 1)
       multiple_solution = []
       for i in range(len(B)):
-         x = alpha * B[i] + (alpha - 1) * C[i]
+         x = alpha * B[i] + (1 - alpha) * C[i]
          multiple_solution.append(round(x, 2))
       return multiple_solution
 
