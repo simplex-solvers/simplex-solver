@@ -10,7 +10,7 @@ class SimplexBase(ABC):
       self.num_of_variables = num_of_variables
       self.all_iterations = []
       self.c = c #Função Objetivo
-      self.M = 100
+      self.M = 100000
       self.A = A
       self.b = b
       self.constraint = constraint
@@ -119,7 +119,6 @@ class SimplexPrimal(SimplexBase):
          self.solution_dict['additional_solutions'] =  self.get_solution()
          self.solution_dict['multiple_solution'] = self.get_multiple_solution()
       
-
       self.solution_dict['optimal_solution'] = self.get_optimal_solution()
 
       return self.solution_dict, self.all_iterations
@@ -196,7 +195,7 @@ class SimplexPrimal(SimplexBase):
             if ratio < min_ratio:
                min_ratio = ratio
                leaving_row = i + 1
-     
+
       return leaving_row
 
 

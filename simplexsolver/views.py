@@ -58,9 +58,10 @@ def graph_solve():
     problem = SimplexPrimal(problem_type, num_of_var, c, A, b, constraints)
     
     solution, _ = problem.solve()
+    print("Solucao: ", solution.get('solution'))
 
     if num_of_var == 2:
-        graph_html = create_graph(A, b, c, constraints, solution)
+        graph_html = create_graph(A, b, c, constraints, solution.get('solution'))
 
     return render_template('graph.html', graph_html=graph_html)
    
