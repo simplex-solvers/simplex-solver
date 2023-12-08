@@ -27,7 +27,7 @@ def tabular_solve():
 
     elif problem_form == "dual":              
         if problem_type =="max":
-            A, b, c, constraints, problem_type = primal_to_dual(A, b, c, problem_type)
+            A, b, c, constraints, problem_type, num_of_var = primal_to_dual(A, b, c, problem_type)
             A, b, constraints = change_constraints(A, b, constraints)
             
         if "=" in constraints or ">=" in constraints:
@@ -58,9 +58,10 @@ def graph_solve():
     problem = SimplexPrimal(problem_type, num_of_var, c, A, b, constraints)
     
     solution, _ = problem.solve()
+    print("Solucao: ", solution.get('solution'))
 
     if num_of_var == 2:
-        graph_html = create_graph(A, b, c, constraints, solution)
+        graph_html = create_graph(A, b, c, constraints, solution.get('solution'))
 
     return render_template('graph.html', graph_html=graph_html)
    

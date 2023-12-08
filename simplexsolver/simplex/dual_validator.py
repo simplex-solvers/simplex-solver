@@ -7,7 +7,9 @@ def primal_to_dual(A, b, c, problem_type):
     for _ in b:
         constraints.append(">=")
     problem_type = "min"
-    return A, b, c, constraints, problem_type
+    num_of_var = c.shape[0]
+
+    return A, b, c, constraints, problem_type, num_of_var
 
 
 def change_constraints(A, b, constraints):
