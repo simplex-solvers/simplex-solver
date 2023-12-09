@@ -1,7 +1,6 @@
 import math
 import numpy as np
 from .simplex_algorithm import SimplexPrimal
-from decimal import Decimal, ROUND_HALF_UP
 
 class Node:
    def __init__(self, A, b, c, constraints, solution_variables, op_z, num_of_var):
@@ -33,13 +32,13 @@ class Node:
          2. solution é um vetor que contém os valores das variáveis de decisão."""
          
          lhs = np.dot(self.A[i], self.solution)
-         
+
          # Checa se alguma condiçâo não for satisfeita (torna o problema impossível)ca o tipo de restrição e se ela é satisfeita pela solução
-         if self.constraints[i] == "<=" and np.around(lhs, 5) > self.b[i]:
+         if self.constraints[i] == "<=" and np.around(lhs, 1) > self.b[i]:
             return False
-         elif self.constraints[i] == ">=" and np.around(lhs, 5) < self.b[i]:
+         elif self.constraints[i] == ">=" and np.around(lhs, 1) < self.b[i]:
             return False
-         elif self.constraints[i] == "=" and np.around(lhs, 5) != self.b[i]:
+         elif self.constraints[i] == "=" and np.around(lhs, 1) != self.b[i]:
             return False
 
       # Se todas as condições forem satisfeitas retorna True, caso contre todas as restrições forem satisfeitas, a solução é viável
