@@ -1,6 +1,6 @@
 import numpy as np
 import plotly.graph_objects as go
-
+import math
 
 def update_restrictions(A, b):
     res = np.hstack((A, np.expand_dims(b, axis=1)))
@@ -84,14 +84,63 @@ def create_level_set(c, fig, x, variables):
     return sliders
 
 
-def create_op(variables, fig, c):
-    fig.add_trace(go.Scatter(x=[variables[0]], y=[variables[1]], mode='markers', name=f'Z = {c[0] * variables[0] + c[1] * variables[1]}', marker=dict(color="#A2C5AC", size=10, line=dict(
+def create_op(variables, int_variables, fig, c):
+    fig.add_trace(go.Scatter(x=[variables[0]], y=[variables[1]], mode='markers', name=f'Z = {round(c[0] * variables[0] + c[1] * variables[1], 2)}', marker=dict(color="#A2C5AC", size=10, line=dict(
         color='black',
         width=2
-    )
-    )))
+    ))))
+    fig.add_trace(go.Scatter(x=[int_variables[0]], y=[int_variables[1]], mode='markers', name=f'Z = {round(c[0] * int_variables[0] + c[1] * int_variables[1], 2)}', marker=dict(color="#ffa8a8", size=10, line=dict(
+        color='black',
+        width=2
+    ))))
 
-def create_graph(A, b, c, constraints, variables):
+
+def get_int_solution(solution, A, b, c, constraints, problem_type):
+    """Função que  arredonda os pontos contínuos do gráfico solução para variáveis inteiras"""
+    
+    int_points = [[math.floor(solution[0]), math.floor(solution[1])],
+                  [math.floor(solution[0]), math.ceil(solution[1])],
+                  [math.ceil(solution[0]), math.floor(solution[1])],
+                  [math.ceil(solution[0]), math.ceil(solution[1])]]
+    
+    if problem_type == "max":
+        best_z = -math.inf
+    elif problem_type == "min":
+        best_z = math.inf
+
+    for point in int_points:
+        if is_feasible(point, A, b, constraints):
+            z_int = sum(point[i] * coef for i, coef in enumerate(c[:2]))
+            if problem_type == "max" and z_int > best_z:
+                best_z = z_int
+                best_point = point
+            if problem_type == "min" and z_int < best_z:
+                best_z = z_int
+                best_point = point
+    return best_point
+
+
+def is_feasible(point, A, b, constraints):
+    """" Verifica se a solução encontrada não fere as restrições do problema """
+    
+    for i in range(len(A)):
+        """Calcula o valor do "lado esquerdo" a partir do produto escalar"""
+        
+        lhs = np.dot(A[i], point)
+        
+        # Checa se alguma condiçâo não for satisfeita (torna o problema impossível)ca o tipo de restrição e se ela é satisfeita pela solução
+        if constraints[i] == "<=" and lhs > b[i]:
+            return False
+        elif constraints[i] == ">=" and lhs < b[i]:
+            return False
+        elif constraints[i] == "=" and lhs != b[i]:
+            return False
+
+    # Se todas as condições forem satisfeitas retorna True. Caso todas as restrições forem satisfeitas, a solução é viável
+    return True
+
+
+def create_graph(A, b, c, constraints, variables, problem_type):
     res = update_restrictions(A, b)
 
     x = np.linspace(0, 20, 400)
@@ -113,7 +162,9 @@ def create_graph(A, b, c, constraints, variables):
 
     sliders = create_level_set(c, fig, x, variables)
 
-    create_op(variables, fig, c)
+    int_variables = get_int_solution(variables, A, b, c, constraints, problem_type)
+
+    create_op(variables, int_variables, fig, c)
 
     fig.update_layout(
         sliders=sliders,
