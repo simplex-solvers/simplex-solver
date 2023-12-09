@@ -1,9 +1,11 @@
 from flask import render_template, request
 from simplexsolver import app
 import numpy as np
+import math
 from .simplex.simplex_algorithm import SimplexPrimal, SimplexDual
 from .simplex.graphic_solution import create_graph
 from .simplex.dual_validator import primal_to_dual, change_constraints
+from .simplex.branch_and_bound import Node, BranchAndBound
 
 @app.route('/')
 def index():    
@@ -35,6 +37,14 @@ def tabular_solve():
 
         problem = SimplexDual(problem_type, num_of_var, c, A, b, constraints)
         solution, all_tableaus = problem.solve()
+    
+    elif problem_form == "integer":
+        problem = SimplexPrimal(problem_type, num_of_var, c, A, b, constraints)
+        solution, all_tableaus = problem.solve()
+        root = Node(A, b, c, constraints, solution['solution'], solution['optimal_solution'], num_of_var) 
+        bb = BranchAndBound(problem_type, solution['optimal_solution'])
+        solution = bb.optimize(root)  
+        print("Melhor solução inteira: ", solution)
 
     for tableau in all_tableaus:
         print(tableau)
