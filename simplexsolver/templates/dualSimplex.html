@@ -1,0 +1,213 @@
+{% extends 'base.html'%}
+
+{%block cabeca%}
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/tableaus.css') }}">
+{%endblock%}
+
+{%block title%}Simplex Dual{%endblock%}
+
+{%block menu%}
+<div class="body">
+    <div class="container-slider">
+        <div class="container-table"></div>
+    </div>
+    <div class="buttons">
+        <button id="prev-button" onclick="decreaseValue()">
+            <?xml version="1.0" ?><svg class="feather feather-chevron-right" fill="none" height="24"
+                stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                <polyline points="9 18 15 12 9 6" />
+            </svg>
+        </button>
+        <div id="iterations"></div>
+        <button id="next-button" onclick="increaseValue()">
+            <?xml version="1.0" ?><svg class="feather feather-chevron-right" fill="none" height="24"
+                stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                <polyline points="9 18 15 12 9 6" />
+            </svg>
+        </button>
+    </div>
+</div>
+{%endblock%}
+
+{%block script%}
+<script>
+    var resultado = JSON.parse('{{json_data | tojson | safe}}'); //Converte os dados em python em js
+    var qntOfVar = JSON.parse('{{qntVar | tojson | safe}}');
+    // console.log(resultado)
+    var iteracao = resultado.all_tableaus.length; // Quntidade de iteracoes = i
+    // console.log("Iterações: " + iteracao)
+    var linhas = resultado.all_tableaus[0].length; // Quantidade de linhas = j
+    // console.log("Linhas: " + linhas)
+    var col = resultado.all_tableaus[0][0].length; // Quantidade de colunas = k
+    // console.log("Colunas: " + col)
+    // console.log(qntOfVar);
+    var coords;
+
+    (function () {
+
+        for (var i = 0; i < iteracao; i++) {
+            var base = mudarBase();
+            var div = $('<div>').attr("class", "slide").appendTo(".container-table");
+            var table = $("<table>").appendTo(div).attr("class", "table");
+            // $("<capition>").text("Iteração " + (i + 1))
+            //     .attr("class", "table")
+            //     .appendTo("#output");
+
+            coords = encontrarPivo(i);
+
+            for (var j = -1; j < linhas; j++) {
+                var tr = $("<tr>").appendTo(table);
+
+                for (var k = -1; k < col; k++) {
+                    if (k == -1 && j == -1) {
+                        $("<td>").text("Base").appendTo(tr);
+
+                    } else if (k == -1 && j == 0) {
+                        $("<td>").text("W").appendTo(tr);
+
+                    } else if (k == -1) {
+                        $("<td>").text(base[i][j + qntOfVar - 1]).appendTo(tr);
+                    }
+
+                    if (j == -1 && k < (col - 1) && k > -1) {
+                        var td = $("<td>").text("Y" + (k + 1)).appendTo(tr);
+
+                    } else if (j == -1 && k == (col - 1)) {
+                        $("<td>").text("LD").appendTo(tr);
+
+                    } else if (j > -1 && k > -1) {
+                        if (j == coords.positionJ && k == coords.positionK) {
+                            label = $("<td>").text(resultado.all_tableaus[i][j][k]).addClass('pivo');
+                        } else {
+                            label = $("<td>").text(resultado.all_tableaus[i][j][k]);
+                        }
+
+                        $(tr).append(label);
+                        //console.log(resultado.all_tableaus[i][j][k]);
+                    }
+                }
+            }
+            $("<br>").appendTo("#output"); // Quebra de linha
+        }
+    })();
+
+    function encontrarPivo(i) {
+        if (i < iteracao - 1) {
+            let Z = [];
+            let LD = [];
+            var minValueP = [];
+            var pivoPosition;
+            let valuePivo;
+            let minValue = 0;
+            var positionJ;
+            var positionK;
+
+            for (var j = 1; j < linhas; j++) { // Define linha pivô
+                // Z.push();
+                Z[0] = 0;
+                Z[j] = resultado.all_tableaus[i][j][col - 1];
+                minValue = Math.min(...Z);
+                if (minValue == Z[j]) {
+                    positionJ = j;
+                }
+            }
+            for (var k = 0; k < col - 1; k++) {
+                LD.push(resultado.all_tableaus[i][0][k]);
+                minValueP.push(LD[k] / resultado.all_tableaus[i][positionJ][k]);
+                valuePivo = minValueP.filter(valor => valor > 0);
+
+                if (minValueP[k] == Math.min(...valuePivo)) {
+                    positionK = k;
+                }
+            }
+
+            // console.log(Z);
+            // console.log(positionK);
+            // console.log(minValue);
+            // console.log(LD);
+            // console.log(minValueP);
+            // console.log("Menor valor: " + Math.min(...valuePivo));
+            // console.log("Coordenadas do pivô: " + positionK + " : " + positionJ);
+            // console.log({ positionK, positionJ });
+        }
+
+        return { positionJ, positionK };
+    }
+
+    function mudarBase() {
+        var base = [];
+        var varBase = [];
+        var oBase = [];
+        var fBase = [];
+        var vars = [];
+        var positionE = [];
+
+        for (k = 1; k < col; k++) {
+            vars.push("Y" + k);
+        }
+
+        for (var i = 0; i < iteracao; i++) {
+
+            for (var j = 1; j < linhas; j++) {
+                varBase[j] = [];
+                for (var k = qntOfVar; k < col - 1; k++) {
+                    varBase[j][k] = resultado.all_tableaus[i][j][k];
+
+                    if (i == 0) {
+                        if (varBase[j][k] == -1) {
+                            positionE.push(k);
+                        }
+                        for (var l = qntOfVar; l < (col - 1); l++) {
+                            base[l] = "Y" + (l + 1);
+                        }
+
+                        if (positionE.length > 0) {
+                            for (var m = 0; m < positionE.length; m++) {
+                                base.splice(positionE[m], 1);
+                            }
+                        }
+                        fBase[i] = [];
+
+                        for (u = 0; u < base.length; u++) {
+                            fBase[i][u] = base[u];
+                        }
+                        // oBase = base;
+                    }
+                }
+            }
+
+            if (i > 0) {
+                var cordinate = encontrarPivo(i - 1);
+                fBase[i] = [];
+                for (var k = 0; k < base.length; k++) {
+                    fBase[i][k] = oBase[k];
+                }
+                base[cordinate.positionJ - 1 + qntOfVar] = vars[cordinate.positionK];
+                // console.log(fBase)
+
+            }
+            oBase = base;
+            for (var k = 0; k < base.length; k++) {
+                fBase[i][k] = oBase[k];
+            }
+            // console.log(oBase)
+            // console.log("A: " + cordinate.positionJ);
+            // console.log("B: " + cordinate.positionK);
+        }
+
+        // console.log(varBase);
+        // console.log(base);
+        // console.log(positionE);
+        // console.log("Tam: " + varBase.length)
+        // console.log(fBase);
+        // console.log(oBase);
+        // console.log(vars);
+        // console.log(base);
+        return fBase;
+    }
+</script>
+
+<script src="{{ url_for('static', filename='JS/slider.js') }}"></script>
+{%endblock%}

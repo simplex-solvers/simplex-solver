@@ -85,11 +85,11 @@ def create_level_set(c, fig, x, variables):
 
 
 def create_op(variables, int_variables, fig, c):
-    fig.add_trace(go.Scatter(x=[variables[0]], y=[variables[1]], mode='markers', name=f'Z = {round(c[0] * variables[0] + c[1] * variables[1], 2)}', marker=dict(color="#A2C5AC", size=10, line=dict(
+    fig.add_trace(go.Scatter(x=[variables[0]], y=[variables[1]], mode='markers', name=f'Z ∈ ℝ = {round(c[0] * variables[0] + c[1] * variables[1], 2)}', marker=dict(color="#A2C5AC", size=10, line=dict(
         color='black',
         width=2
     ))))
-    fig.add_trace(go.Scatter(x=[int_variables[0]], y=[int_variables[1]], mode='markers', name=f'Z = {round(c[0] * int_variables[0] + c[1] * int_variables[1], 2)}', marker=dict(color="#ffa8a8", size=10, line=dict(
+    fig.add_trace(go.Scatter(x=[int_variables[0]], y=[int_variables[1]], mode='markers', name=f'Z ∈ ℤ = {round(c[0] * int_variables[0] + c[1] * int_variables[1], 2)}', marker=dict(color="#ffa8a8", size=10, line=dict(
         color='black',
         width=2
     ))))

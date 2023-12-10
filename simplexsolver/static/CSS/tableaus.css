@@ -1,0 +1,118 @@
+table,
+tr,
+td {
+    width: max-content;
+    border-style: solid;
+    font-size: 20px;
+    text-align: center;
+    border: 1px solid rgb(0, 0, 0);
+    border-collapse: collapse;
+    background-color: white;
+}
+
+td {
+    width: 50px;
+    height: 30px;
+}
+
+tr:first-child td{
+    background-color: rgb(197, 197, 197);
+}
+
+.body{
+    width: max-content;
+    transform: translateX(50%);
+    background-color: rgb(255, 255, 255);
+    padding: 10px;
+    border-radius: 20px;
+}
+
+.table {
+    min-width: 100%;
+    top: 50%;
+    box-sizing: border-box;
+    padding: 20px;
+    border-style: solid;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container-slider {
+    display: flex;
+    width: 100%;
+    min-height: 50vh;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.container-table {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 700px;
+}
+
+.slide {
+    opacity: 0;
+    transition: opacity .2s;
+    position: absolute;
+    width: 100%;
+    border-radius: 10px;
+    background-color: white;
+}
+
+.on {
+    opacity: 1;
+}
+
+.buttons{
+    display: flex;
+    height: 70px;
+    justify-content: space-between;
+}
+
+.pivo{
+    background-color: rgba(255, 190, 147, 0.631);
+}
+
+#prev-button,
+#next-button {
+    width: 60px;
+    height: 60px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+#prev-button svg,
+#next-button svg {
+    width: 60px;
+    height: 60px;
+    color: gray;
+}
+
+#prev-button svg:hover,
+#next-button svg:hover{
+    color: #FFD9BF;
+}
+
+#prev-button {
+    transform: rotate(180deg);
+    text-align: left;
+}
+
+#iterations{
+    text-align: center;
+    font-size: 20px;
+    margin: auto;
+}
+
+#next-button{
+    text-align: right;
+}
