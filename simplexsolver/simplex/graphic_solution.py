@@ -143,8 +143,8 @@ def is_feasible(point, A, b, constraints):
 def create_graph(A, b, c, constraints, variables, problem_type):
     res = update_restrictions(A, b)
 
-    x = np.linspace(0, 20, 400)
-    y = np.linspace(0, 20, 400)
+    x = np.linspace(0, variables[0] + 5, 400)
+    y = np.linspace(0, variables[1] + 5, 400)
     X, Y = np.meshgrid(x, y)
 
     fig = go.Figure()
