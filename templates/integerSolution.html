@@ -1,0 +1,89 @@
+{% extends 'base.html'%}
+
+{%block cabeca%}
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/integer.css') }}">
+{%endblock%}
+
+{%block title%}Solução Inteira - Branch and Bound{%endblock%}
+
+{%block menu%}
+<div class="body">
+    <div class="resultado">
+    </div>
+</div>
+{%endblock%}
+
+{%block script%}
+<script>
+    var resultado = JSON.parse('{{json_data | tojson | safe}}');
+    var data = JSON.parse('{{data | tojson | safe}}');
+    var qntOfVar = JSON.parse('{{qntVar | tojson | safe}}');
+    var qntRest = JSON.parse('{{qntRest | tojson | safe}}');
+    console.log(resultado);
+    console.log(data);
+
+    for (let i = 0; i < qntOfVar; i++) {
+        if (i == 0) {
+            $("<label>").text("Z = " + data.c[i] + "X" + (i + 1) + " + ").appendTo('.resultado');
+        }
+        else if (i == qntOfVar - 1) {
+            $("<label>").text(data.c[i] + "X" + (i + 1)).appendTo('.resultado');
+        }
+        else {
+            $("<label>").text(data.c[i] + "X" + (i + 1) + " + ").appendTo('.resultado');
+        }
+    }
+
+    $("<br>").appendTo('.resultado');
+
+    for (let i = 0; i < qntRest; i++) {
+        for (let j = 0; j < qntOfVar; j++) {
+            if (j == 0) {
+                $("<label>").text(data.A[i][j] + "X" + (j + 1) + " + ").appendTo('.resultado');
+            }
+            else if (j == qntOfVar - 1) {
+                $("<label>").text(data.A[i][j] + "X" + (j + 1)).appendTo('.resultado');
+            }
+            else{ 
+                $("<label>").text(data.A[i][j] + "X" + (j + 1) + " + ").appendTo('.resultado');
+            }
+        } 
+
+        $('<label>').text(" " + data.constraints[i] + " ").appendTo('.resultado');
+
+        $('<label>').text(" " + data.b[i] + " ").appendTo('.resultado');
+
+        $("<br>").appendTo('.resultado');
+
+
+    }
+    // for (let j = 0; j < qntOfVar; j++) {
+    //     for (let i = 0; i < qntCamp; i++) {
+    //         let label = $("<label>").text("X" + (i + 1));
+    //         let input = $("<input>")
+    //             .attr("type", "number")
+    //             .attr("step", "0.01")
+    //             .attr("id", "campoR" + i + j)
+    //             .attr("name", "campoR[]")
+    //             .attr("class", "campo");
+
+    //         if (i < qntCamp - 1) {
+    //             label.text("x" + (i + 1) + " + ");
+    //         } else {
+    //             label.text("x" + (i + 1) + " ");
+    //         }
+
+    //         input.appendTo("#container");
+    //         label.appendTo("#container");
+    //     }
+    // }
+
+    $('<p>').text("Valor ótimo inteiro: " + resultado.solution.optimal_solution).appendTo('.resultado');
+    $('<br>').appendTo('.resultado');
+    $('<p>').text("Solução inteira:").appendTo('.resultado');
+
+    for (var i = 0; i < qntOfVar; i++) {
+        $('<p>').text("X" + (i + 1) + ": " + resultado.solution.solution[i]).appendTo('.resultado');
+    }
+</script>
+{%endblock%}

@@ -1,0 +1,10 @@
+.resultado{
+    font-size: 20px;
+    border-radius: 20px;
+    background-color: white;
+    min-height: 150px;
+   
+    padding: 10px;
+    margin: 0 auto;
+    width: 30%;
+}
