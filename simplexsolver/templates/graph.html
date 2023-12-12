@@ -1,13 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Gráfico</title>
+{% extends 'base.html'%}
+
+{%block cabeca%}
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-</head>
-<body>
-    <h1>Odeio gráficos</h1>
-    <div id="graph-container">
-        {{ graph_html | safe }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='CSS/graph.css') }}">
+{%endblock%}
+
+{%block title%}Solução Gráfica{%endblock%}
+
+{%block menu%}
+    <div class="body">
+        <div id="graph-container">
+            {{ graph_html | safe }}
+        </div>
     </div>
-</body>
-</html>
+{%endblock%}

@@ -1,6 +1,7 @@
 import numpy as np
 
 def primal_to_dual(A, b, c, problem_type):
+    """ Transforma o problema de maximização em minimização e transpõe a matriz de restrições """
     A = np.transpose(A)
     b, c = c, b
     constraints = []
@@ -13,6 +14,7 @@ def primal_to_dual(A, b, c, problem_type):
 
 
 def change_constraints(A, b, constraints):
+   """ Transforma as restições do problema e cria inviabilidade """
    new_A = []
    new_b = []
    new_constraints = []

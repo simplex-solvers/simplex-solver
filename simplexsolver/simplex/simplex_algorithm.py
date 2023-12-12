@@ -10,7 +10,6 @@ class SimplexBase(ABC):
       self.num_of_variables = num_of_variables
       self.all_iterations = []
       self.c = c #Função Objetivo
-      self.M = 100000
       self.A = A
       self.b = b
       self.constraint = constraint
@@ -205,7 +204,6 @@ class SimplexPrimal(SimplexBase):
          count_0 = np.count_nonzero(row == 0)
 
          if self.tableau[0][i] == 0 and count_1 != 1 and count_0 != 0:
-            print("Multiplas soluções")
             leaving_row = self.get_leaving_row(i)
             pivot_value = self.get_pivot_value(leaving_row, i)
             self.update_tableau(leaving_row, i, pivot_value)

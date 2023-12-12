@@ -32,7 +32,8 @@ function gerarCFuncaoObjetivo() {
       .attr("step","0.01")
       .attr("id", "campo" + i)
       .attr("name", "campo[]")
-      .attr("class", "campo");
+      .attr("class", "campo")
+      .prop('required', true);
 
     // Adiciona a label e o campo ao contêiner
     $("#container").append(input);
@@ -58,7 +59,8 @@ function gerarRestricoes() {
         .attr("step","0.01")
         .attr("id", "campoR" + i + j)
         .attr("name","campoR[]")
-        .attr("class", "campo");
+        .attr("class", "campo")
+        .prop('required', true);
 
       if (i < qtdeCampos - 1) {
         label.text("x" + (i + 1) + " + ");
@@ -77,7 +79,8 @@ function gerarRestricoes() {
       .attr("step","0.01")
       .attr("id", "resp" + j)
       .attr("name","resp[]")
-      .attr("class","campo");
+      .attr("class","campo")
+      .prop('required', true);
 
     inputR.appendTo("#container");
 

@@ -1,10 +1,10 @@
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request
 from simplexsolver import app
 import numpy as np
 from .simplex.simplex_algorithm import SimplexPrimal, SimplexDual
 from .simplex.graphic_solution import create_graph
 from .simplex.dual_validator import primal_to_dual, change_constraints
-#from .simplex.branch_and_bound import Node, BranchAndBound
+from .simplex.branch_and_bound import Node, BranchAndBound
 
 @app.route('/', methods=['GET'])
 def index():
@@ -38,7 +38,6 @@ def solver():
         "b": Sb
     }
 
-    # data = request.get_json()
     c = np.array(data['c'])
     A = np.array(data['A'])
     b = np.array(data['b'])
@@ -49,6 +48,14 @@ def solver():
         if num_of_var == 2:
             graph_html = create_graph(A, b, c, constraints, solution['solution'], problem_type)
         return render_template('graph.html', graph_html=graph_html)
+    
+    elif problem_form == "integer":
+        problem = SimplexPrimal(problem_type, num_of_var, c, A, b, constraints)
+        solution, all_tableaus = problem.solve()
+        root = Node(A, b, c, constraints, solution['solution'], solution['optimal_solution'], num_of_var) 
+        bb = BranchAndBound(problem_type, solution['optimal_solution'])
+        solution = bb.optimize(root)  
+        print("Melhor solução inteira: ", solution)
 
     elif problem_form == "primal":
         problem = SimplexPrimal(problem_type, num_of_var, c, A, b, constraints)
@@ -66,27 +73,18 @@ def solver():
         problem = SimplexDual(problem_type, num_of_var, c, A, b, constraints)
         solution, all_tableaus = problem.solve()
 
-    #Problem inteiro (Branch and Bound)
-    # elif problem_form == "integer":
-    #     problem = SimplexPrimal(problem_type, num_of_var, c, A, b, constraints)
-    #     solution, all_tableaus = problem.solve()
-    #     root = Node(A, b, c, constraints, solution['solution'], solution['optimal_solution'], num_of_var) 
-    #     bb = BranchAndBound(problem_type, solution['optimal_solution'])
-    #     solution = bb.optimize(root)  
-    #     print("Melhor solução inteira: ", solution)
 
-    for tableau in all_tableaus:
-        print(tableau)
-
-        tableaus = {
-            "solution": solution,
-            "all_tableaus": [tableau for tableau in all_tableaus]
-        }
+    tableaus = {
+        "solution": solution,
+        "all_tableaus": [tableau for tableau in all_tableaus]
+    }
     
     if problem_form == "primal":
         return render_template('tabularSimplex.html', json_data=tableaus, qntVar = num_of_var)
     elif problem_form == "dual":
         return render_template('dualSimplex.html', json_data=tableaus, qntVar = num_of_var)
+    elif problem_form == "integer":
+        return render_template('integerSolution.html', json_data=tableaus, qntVar = num_of_var, qntRest=qntrest, data=data)
 
 @app.route("/teste")
 def teste():

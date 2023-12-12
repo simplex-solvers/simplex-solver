@@ -8,6 +8,7 @@ def update_restrictions(A, b):
 
 
 def create_convex_area(x, y, X, Y, res, constraints, fig):
+    """ Cria a área convexa a partir das restrições """
     Z = np.zeros(X.shape)
     for i, constraint in enumerate(constraints):
         if constraint == "<=":
@@ -28,6 +29,7 @@ def create_convex_area(x, y, X, Y, res, constraints, fig):
 
 
 def create_lines(fig, x, y, res, constraints):
+    """ Cria as linhas das restrições """
     for i in range(res.shape[0]):
         if res[i, 1] != 0:
             m = -res[i, 0] / res[i, 1]
@@ -85,6 +87,7 @@ def create_level_set(c, fig, x, variables):
 
 
 def create_op(variables, int_variables, fig, c):
+    """ Definição dos pontos ótimos """
     fig.add_trace(go.Scatter(x=[variables[0]], y=[variables[1]], mode='markers', name=f'Z ∈ ℝ = {round(c[0] * variables[0] + c[1] * variables[1], 2)}', marker=dict(color="#A2C5AC", size=10, line=dict(
         color='black',
         width=2
@@ -128,7 +131,7 @@ def is_feasible(point, A, b, constraints):
         
         lhs = np.dot(A[i], point)
         
-        # Checa se alguma condiçâo não for satisfeita (torna o problema impossível)ca o tipo de restrição e se ela é satisfeita pela solução
+        # Checa se alguma condiçâo não é satisfeita
         if constraints[i] == "<=" and lhs > b[i]:
             return False
         elif constraints[i] == ">=" and lhs < b[i]:
@@ -136,7 +139,7 @@ def is_feasible(point, A, b, constraints):
         elif constraints[i] == "=" and lhs != b[i]:
             return False
 
-    # Se todas as condições forem satisfeitas retorna True. Caso todas as restrições forem satisfeitas, a solução é viável
+    # Se todas as condições forem satisfeitas retorna True
     return True
 
 

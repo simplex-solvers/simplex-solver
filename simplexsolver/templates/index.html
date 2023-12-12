@@ -15,18 +15,18 @@
         <select name="solucao" id="solucao" class="select big">
           <option value="0" disabled selected>--Selecione--</option>
           <option value="graph">Gráfica</option>
-          <option value="inteiro">Solução Inteira</option>
+          <option value="integer">Solução Inteira</option>
           <option value="primal">Simplex Primal</option>
           <option value="dual">Simplex Dual</option>
         </select>
 
         <label for="quantidadeCampos" >Quantidade de variáveis:</label>
 
-        <input type="number" id="quantidadeCampos" min="2" class="campo" name="qntdCamp"/>
+        <input type="number" id="quantidadeCampos" min="2" class="campo" name="qntdCamp" required/>
 
         <label for="quantidadeRestricoes">Quantidade de restrições:</label>
 
-        <input type="number" id="quantidadeRestricoes" min="1" class="campo" name="qntdRestr"/>
+        <input type="number" id="quantidadeRestricoes" min="1" class="campo" name="qntdRestr" required/>
 
         <input type="button" id="btn" value="Ok" class="btnok">
       </div>

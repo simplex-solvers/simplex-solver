@@ -9,12 +9,12 @@ body {
     box-sizing: border-box;
 }
 
-svg {
-    width: 40px;
-    height: 40px;
+button svg {
+    width: 30px;
+    height: 30px;
 }
 
-body{
+body {
     margin: 0;
 }
 
@@ -23,9 +23,9 @@ ul {
 }
 
 img {
-    width: 90px;
-    height: 80px;
-    padding-left: 10px;
+    width: 70px;
+    height: 70px;
+    margin-left: 15px;
 }
 
 .title {
@@ -42,7 +42,7 @@ img {
     position: relative;
     top: 0;
     left: 0;
-    width: 100%;
+    width: auto;
     background-color: transparent;
     color: #000000;
     padding: 2px 20px 0 0;

@@ -33,7 +33,7 @@ class Node:
          
          lhs = np.dot(self.A[i], self.solution)
 
-         # Checa se alguma condiçâo não for satisfeita (torna o problema impossível)ca o tipo de restrição e se ela é satisfeita pela solução
+         # Checa se alguma condiçâo não é satisfeita (torna o problema impossível)
          if self.constraints[i] == "<=" and np.around(lhs, 1) > self.b[i]:
             return False
          elif self.constraints[i] == ">=" and np.around(lhs, 1) < self.b[i]:
@@ -41,7 +41,7 @@ class Node:
          elif self.constraints[i] == "=" and np.around(lhs, 1) != self.b[i]:
             return False
 
-      # Se todas as condições forem satisfeitas retorna True, caso contre todas as restrições forem satisfeitas, a solução é viável
+      # Se todas as condições forem satisfeitas retorna True
       return True
    
    
@@ -65,7 +65,6 @@ class BranchAndBound:
       solution, _ = problem.solve()
       node.z = solution['optimal_solution']
       node.solution = solution['solution']
-      print(f"solução: {solution['solution']}, optimal_solution: {solution['optimal_solution']}")
 
 
    def branch(self, node):
@@ -93,13 +92,10 @@ class BranchAndBound:
 
 
    def optimize(self, node):
-      """A parada da recursividade são baseados em 3 critérios:
-         1. Para quando o problema é impossível (fere as restrições dos outros prooblemas)
-         2. Parar quando não se existe uma solução pelo simplex
+      """A parada da recursividade é baseada em 3 critérios:
+         1. Parar quando o problema é impossível (fere as restrições dos outros prooblemas)
+         2. Parar quando não existe uma solução pelo simplex
          3. Parar quando for obtida uma solução inteira """
-      
-      print("-" * 50)
-      print("Nó executado: ", node)
       
       if self.root == None: 
          self.root = node #Se não tem nó raiz, cria o primeiro     
@@ -115,7 +111,6 @@ class BranchAndBound:
 
       #Se a solução não possui todas variáveis inteiras, ramifica
       if any(value != int(value) for value in node.solution): 
-         print("Valor não otimo: ", node.solution)
          self.branch(node) #Ramifica
          self.optimize(node.left_child) #Chamada de recursividade para o filho da esquerda
          self.optimize(node.right_child) #Chamada de recursividade para o filho direito

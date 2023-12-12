@@ -1,0 +1,82 @@
+{% extends 'base.html'%}
+
+{%block cabeca%}
+<link rel="stylesheet" href="{{ url_for('static', filename='CSS/integer.css') }}">
+{%endblock%}
+
+{%block title%}Solução Inteira - Branch and Bound{%endblock%}
+
+{%block menu%}
+<div class="body">
+    <div class="resultado">
+    </div>
+</div>
+{%endblock%}
+
+{%block script%}
+<script>
+    var resultado = JSON.parse('{{json_data | tojson | safe}}');
+    var data = JSON.parse('{{data | tojson | safe}}');
+    var qntOfVar = JSON.parse('{{qntVar | tojson | safe}}');
+    var qntRest = JSON.parse('{{qntRest | tojson | safe}}');
+    console.log(resultado);
+    console.log(data);
+
+    if(data.problem_type == "max"){
+        $("<label>").text("Maximizar ").appendTo('.resultado');
+            
+    }else if(data.problem_type == "min"){
+        $("<label>").text("Minimizar ").appendTo('.resultado');
+    }
+
+    for (let i = 0; i < qntOfVar; i++) {
+        if (i == 0) {
+            $("<label>").text("Z = " + data.c[i] + "X" + (i + 1) + " + ").appendTo('.resultado');
+        }
+        else if (i == qntOfVar - 1) {
+            $("<label>").text(data.c[i] + "X" + (i + 1)).appendTo('.resultado');
+        }
+        else {
+            $("<label>").text(data.c[i] + "X" + (i + 1) + " + ").appendTo('.resultado');
+        }
+    }
+
+    $("<br>").appendTo('.resultado');
+
+    $("<label>").text("S.a").appendTo('.resultado');
+
+    $("<br>").appendTo('.resultado');
+
+    for (let i = 0; i < qntRest; i++) {
+        for (let j = 0; j < qntOfVar; j++) {
+            if (j == 0) {
+                $("<label>").text(data.A[i][j] + "X" + (j + 1) + " + ").appendTo('.resultado');
+            }
+            else if (j == qntOfVar - 1) {
+                $("<label>").text(data.A[i][j] + "X" + (j + 1)).appendTo('.resultado');
+            }
+            else{ 
+                $("<label>").text(data.A[i][j] + "X" + (j + 1) + " + ").appendTo('.resultado');
+            }
+        } 
+
+        $('<label>').text(" " + data.constraints[i] + " ").appendTo('.resultado');
+
+        $('<label>').text(" " + data.b[i] + " ").appendTo('.resultado');
+
+        $("<br>").appendTo('.resultado');
+
+
+    }
+
+    $('<br>').appendTo('.resultado');
+
+    $('<p>').text("Valor ótimo inteiro: " + resultado.solution.optimal_solution).appendTo('.resultado');
+    $('<br>').appendTo('.resultado');
+    $('<p>').text("Solução inteira:").appendTo('.resultado');
+
+    for (var i = 0; i < qntOfVar; i++) {
+        $('<p>').text("X" + (i + 1) + ": " + resultado.solution.solution[i]).appendTo('.resultado');
+    }
+</script>
+{%endblock%}

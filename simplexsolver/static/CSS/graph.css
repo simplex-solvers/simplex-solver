@@ -1,0 +1,12 @@
+#graph-container {
+    height: max-content;
+    width: max-content;
+    background-color: white;
+    display: inline-block;
+    padding: 5px;
+    border-radius: 20px;
+}
+
+.body {
+    text-align: center;
+}

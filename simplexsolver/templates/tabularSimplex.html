@@ -7,28 +7,34 @@
 {%block title%}Simplex Primal{%endblock%}
 
 {%block menu%}
-<div class="body">
-  <div class="container-slider">
-    <div class="container-table"></div>
+<div class="master">
+  <div class="body">
+    <div class="container-slider">
+      <div class="container-table"></div>
+    </div>
+    <div class="buttons">
+      <button id="prev-button" onclick="decreaseValue()">
+        <?xml version="1.0" ?><svg class="feather feather-chevron-right" fill="none" height="24" stroke="currentColor"
+          stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"
+          xmlns="http://www.w3.org/2000/svg">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </button>
+      <div id="iterations"></div>
+      <button id="next-button" onclick="increaseValue()">
+        <?xml version="1.0" ?><svg class="feather feather-chevron-right" fill="none" height="24" stroke="currentColor"
+          stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"
+          xmlns="http://www.w3.org/2000/svg">
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </button>
+    </div>
+
   </div>
-  <div class="buttons">
-    <button id="prev-button" onclick="decreaseValue()">
-      <?xml version="1.0" ?><svg class="feather feather-chevron-right" fill="none" height="24" stroke="currentColor"
-        stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"
-        xmlns="http://www.w3.org/2000/svg">
-        <polyline points="9 18 15 12 9 6" />
-      </svg>
-    </button>
-    <div id="iterations"></div>
-    <button id="next-button" onclick="increaseValue()">
-      <?xml version="1.0" ?><svg class="feather feather-chevron-right" fill="none" height="24" stroke="currentColor"
-        stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24"
-        xmlns="http://www.w3.org/2000/svg">
-        <polyline points="9 18 15 12 9 6" />
-      </svg>
-    </button>
+  <div class="resultado">
   </div>
 </div>
+
 {%endblock%}
 
 {%block script%}
@@ -44,6 +50,7 @@
   console.log("Colunas: " + col)
   console.log(qntOfVar);
   var coords;
+  exibirSolução();
 
   (function () {
     var base = mudarBase();
@@ -52,8 +59,6 @@
       var div = $('<div>').attr("class", "slide").appendTo(".container-table");
       var table = $("<table>").appendTo(div).attr("class", "table");
       coords = encontrarPivo(i);
-      // $("<capition>").text("Iteração " + (i + 1))
-      // .appendTo(div);
 
       for (var j = -1; j < linhas; j++) { // Linha
         var tr = $("<tr>").appendTo(table);
@@ -83,7 +88,6 @@
             }
 
             $(tr).append(label);
-            //console.log(resultado.all_tableaus[i][j][k]);
           }
         }
       }
@@ -120,15 +124,6 @@
           positionJ = j;
         }
       }
-
-      // console.log(Z);
-      // console.log(positionK);
-      // console.log(minValue);
-      // console.log(LD);
-      // console.log(minValueP);
-      // console.log("Menor valor: " + Math.min(...valuePivo));
-      // console.log("Coordenadas do pivô: " + positionK + " : " + positionJ);
-      // console.log({ positionK, positionJ });
     }
 
     return { positionJ, positionK };
@@ -171,7 +166,6 @@
             for (u = 0; u < base.length; u++) {
               fBase[i][u] = base[u];
             }
-            // oBase = base;
           }
         }
       }
@@ -183,27 +177,48 @@
           fBase[i][k] = oBase[k];
         }
         base[cordinate.positionJ - 1 + qntOfVar] = vars[cordinate.positionK];
-        // console.log(fBase)
 
       }
       oBase = base;
       for (var k = 0; k < base.length; k++) {
         fBase[i][k] = oBase[k];
       }
-      // console.log(oBase)
-      // console.log("A: " + cordinate.positionJ);
-      // console.log("B: " + cordinate.positionK);
+    }
+    console.log(fBase);
+    return fBase;
+  }
+
+  function exibirSolução() {
+    var optSolution = resultado.solution;
+    console.log(optSolution.additional_solutions);
+
+    $('<p>').text("Solução ótima: " + optSolution.optimal_solution).appendTo('.resultado');
+    $('<br>').appendTo('.resultado');
+    $('<p>').text("Solução:").appendTo('.resultado');
+
+    for (var i = 0; i < qntOfVar; i++) {
+      $('<p>').text("X" + (i + 1) + ": " + optSolution.solution[i]).appendTo('.resultado');
     }
 
-    // console.log(varBase);
-    // console.log(base);
-    // console.log(positionE);
-    // console.log("Tam: " + varBase.length)
-    console.log(fBase);
-    // console.log(oBase);
-    // console.log(vars);
-    // console.log(base);
-    return fBase;
+    $('<br>').appendTo('.resultado');
+
+    if (optSolution.additional_solutions != undefined) {
+      $('<p>').text("Solução múltipla aleatória: ").appendTo('.resultado');
+
+      for (var i = 0; i < qntOfVar; i++) {
+        $('<p>').text("X" + (i + 1) + ": " + optSolution.multiple_solution[i]).appendTo('.resultado');
+      }
+
+      $('<br>').appendTo('.resultado');
+
+      $('<p>').text("Solução múltipla: ").appendTo('.resultado');
+
+      for (var i = 0; i < qntOfVar; i++) {
+        $('<p>').text("X" + (i + 1) + ": " + optSolution.additional_solutions[i]).appendTo('.resultado');
+      }
+
+    }
+
   }
 </script>
 
