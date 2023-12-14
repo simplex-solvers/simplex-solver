@@ -1,6 +1,6 @@
-# Symply
+# Simply
 
-O Symply é uma aplicação web baseada em Flask que resolve problemas de **programação linear** utilizando o método **Simplex** e problemas de programação inteira utilizando o Branch and Bound. Além disso, também oferece a solução gráfica continua e inteira. 
+O Simply é uma aplicação web baseada em Flask que resolve problemas de **programação linear** utilizando o método **Simplex** e problemas de programação inteira utilizando o Branch and Bound. Além disso, também oferece a solução gráfica continua e inteira. 
 
 
 ## Tabela de Conteúdo
